@@ -1,0 +1,22 @@
+﻿version: "3.8"
+services:
+  backend:
+    build: ./backend
+    container_name: software_estimation_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=/app/models/rf_teamexp_classifier.pkl
+      - DATA_PATH=/app/models/data_saved.csv
+      - ADMIN_TOKEN=supersecretadmintoken
+    restart: unless-stopped
+
+  frontend:
+    image: nginx:alpine
+    container_name: software_estimation_frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - backend

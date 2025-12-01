@@ -1,0 +1,24 @@
+﻿services:
+  backend:
+    build: ./backend
+    container_name: software_estimation_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=/app/models/rf_teamexp_classifier.pkl
+      - DATA_PATH=/app/models/data_saved.csv
+      - ADMIN_TOKEN=supersecretadmintoken
+    volumes:
+      - ./backend/database:/app/database    # persist sqlite DB
+      - ./backend/models:/app/models        # allow host model edits to reflect in container
+    restart: unless-stopped
+
+  frontend:
+    image: nginx:alpine
+    container_name: software_estimation_frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - backend

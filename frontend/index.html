@@ -1,0 +1,58 @@
+﻿<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Software Project Estimation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+  <div class="container">
+    <h1>Software Project Estimation</h1>
+    <p>Predict TeamExp and compute analogous cost (Effort / Transactions)</p>
+
+    <div class="card p-3 mb-3">
+      <h5>Predict TeamExp</h5>
+      <textarea id="features" class="form-control" rows="4">{"Project":10,"ManagerExp":5,"YearEnd":2000,"Length":12,"Effort":1000,"Transactions":200,"Entities":10,"PointsNonAdjust":50,"Adjustment":1,"PointsAjust":55,"Language":"1"}</textarea>
+      <button id="predictBtn" class="btn btn-primary mt-2">Predict</button>
+      <pre id="predictResult"></pre>
+    </div>
+
+    <div class="card p-3">
+      <h5>Analogous Cost</h5>
+      <input id="size" class="form-control" value="1000" />
+      <button id="analogBtn" class="btn btn-success mt-2">Estimate Cost</button>
+      <pre id="analogResult"></pre>
+    </div>
+  </div>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000";
+
+document.getElementById('predictBtn').onclick = async () => {
+  try {
+    const body = { features: JSON.parse(document.getElementById('features').value) };
+    const res = await fetch(API_BASE + '/predict', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+    });
+    const json = await res.json();
+    document.getElementById('predictResult').textContent = JSON.stringify(json, null, 2);
+  } catch (err) {
+    document.getElementById('predictResult').textContent = "Error: " + err;
+  }
+};
+
+document.getElementById('analogBtn').onclick = async () => {
+  try {
+    const size = parseInt(document.getElementById('size').value);
+    const res = await fetch(API_BASE + '/analogous', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({size})
+    });
+    const json = await res.json();
+    document.getElementById('analogResult').textContent = JSON.stringify(json, null, 2);
+  } catch (err) {
+    document.getElementById('analogResult').textContent = "Error: " + err;
+  }
+};
+</script>
+</body>
+</html>
