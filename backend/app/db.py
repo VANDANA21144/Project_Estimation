@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 
 DB_DIR = Path(__file__).resolve().parents[1] / "database"
 DB_DIR.mkdir(parents=True, exist_ok=True)
-DB_PATH = DB_DIR / "software_estimation.db"
+DB_PATH = DB_DIR / "project_estimation.db"
 
 def get_connection(path: Optional[str] = None):
     p = DB_PATH if path is None else Path(path)
